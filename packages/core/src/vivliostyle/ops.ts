@@ -933,8 +933,15 @@ export class StyleInstance
       // Issue #1991: a continuation page can start in deferred text before any
       // new in-flow element begins, so recover the containing normal-flow
       // element from the raw offset instead of jumping to the next element.
+      // getNodeByOffset() returns the next element when no node starts at the
+      // offset. Then there is no deferred text to recover: the page starts at
+      // that element, e.g. after a page re-rendered for target-counter() ends
+      // between two blocks.
       const nodeAtOffset = this.xmldoc.getNodeByOffset(pageStartOffset);
-      if (!Vtree.canIgnore(nodeAtOffset)) {
+      const startsAtFollowingElement =
+        nodeAtOffset.nodeType === Node.ELEMENT_NODE &&
+        this.xmldoc.getElementOffset(nodeAtOffset as Element) > pageStartOffset;
+      if (!startsAtFollowingElement && !Vtree.canIgnore(nodeAtOffset)) {
         let currentElement =
           nodeAtOffset.nodeType === Node.ELEMENT_NODE
             ? (nodeAtOffset as Element)

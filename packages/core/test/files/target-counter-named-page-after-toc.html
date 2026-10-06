@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<!-- Test case for a named page that starts right after a page re-rendered to
+     resolve target-counter(). The re-rendered page can end between two blocks,
+     before the element that sets the named page. -->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>target-counter() named page after TOC</title>
+    <style>
+      :root {
+        font-family: "Times New Roman", Times, serif;
+        line-height: 1.8;
+      }
+
+      * {
+        margin: 0;
+      }
+
+      @page {
+        size: 300px;
+        margin: 36px;
+        outline: 1px dotted;
+        @bottom-center {
+          content: counter(page);
+          font-size: 0.8em;
+        }
+      }
+
+      @page Opening {
+        margin: 0;
+        background-color: lightgray;
+        @bottom-center {
+          content: none;
+        }
+      }
+
+      nav a::after {
+        content: " " target-counter(attr(href url), page);
+      }
+
+      .opening {
+        page: Opening;
+        break-before: page;
+        padding: 36px;
+      }
+
+      p,
+      li {
+        font-size: 14px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <nav>
+      <p>This page should be the default page type (white, page number 1).</p>
+      <ul>
+        <li><a href="#opening-1">Opening 1</a></li>
+        <li><a href="#opening-2">Opening 2</a></li>
+      </ul>
+    </nav>
+
+    <div class="opening" id="opening-1">
+      <p>
+        Opening 1: this page should be Opening (lightgray, no margins, no page
+        number), like Opening 2.
+      </p>
+    </div>
+    <section>
+      <p>This page should be the default page type (white, page number 3).</p>
+    </section>
+
+    <div class="opening" id="opening-2">
+      <p>Opening 2: this page should be Opening (lightgray, no page number).</p>
+    </div>
+    <section>
+      <p>This page should be the default page type (white, page number 5).</p>
+    </section>
+  </body>
+</html>

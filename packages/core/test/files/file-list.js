@@ -490,6 +490,10 @@ module.exports = [
         file: "target-counter-missing-page.html",
         title: "target-counter() missing page (Issue #1498)",
       },
+      {
+        file: "target-counter-named-page-after-toc.html",
+        title: "target-counter() named page right after the TOC page",
+      },
       { file: "target-text.html", title: "target-text() - Basic Tests" },
       {
         file: "target-text-running-element.html",
